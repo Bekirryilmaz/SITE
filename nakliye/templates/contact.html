@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}İletişim - {{ about.company_name|default:"Ay Yıldız Nakliyat" }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-envelope"></i> İletişim</h1>
+        <p>Bizimle iletişime geçin</p>
+    </div>
+</section>
+
+<!-- Contact Content -->
+<section class="contact-section">
+    <div class="container">
+        <div class="contact-layout">
+            <!-- Sol - İletişim Formu -->
+            <div class="contact-form-wrapper">
+                <h3><i class="fab fa-whatsapp"></i> Bize Ulaşın</h3>
+                <p style="color: var(--text-light); margin-bottom: 15px;">
+                    Formu doldurun, mesajınız WhatsApp üzerinden bize iletilsin.
+                </p>
+                <p class="required-notice"><i class="fas fa-info-circle"></i> <span class="required-star">*</span> ile işaretli alanların doldurulması zorunludur.</p>
+                
+                <!-- WhatsApp üzerinden mesaj gönderimi için form -->
+                <form id="contactForm" onsubmit="return sendWhatsAppMessage(event, 'contact')">
+                    
+                    <div class="form-group">
+                        <input type="text" name="name" id="contact_name" class="form-input" placeholder="Adınız Soyadınız *" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="email" name="email" id="contact_email" class="form-input" placeholder="E-Mail Adresiniz">
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="tel" name="phone" id="contact_phone" class="form-input" placeholder="Telefon Numaranız *" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <select name="subject" id="contact_subject" class="form-select" required>
+                            <option value="">Konu Seçiniz *</option>
+                            <option value="Evden Eve Nakliyat">Evden Eve Nakliyat</option>
+                            <option value="Şehirler Arası Nakliyat">Şehirler Arası Nakliyat</option>
+                            <option value="Ofis Taşımacılığı">Ofis Taşımacılığı</option>
+                            <option value="Paketleme Hizmeti">Paketleme Hizmeti</option>
+                            <option value="Mobilya Montajı">Mobilya Montajı</option>
+                            <option value="Diğer">Diğer</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <select name="room_count" id="contact_room_count" class="form-select" required>
+                            <option value="">Oda Sayısı Seçiniz *</option>
+                            <option value="1+0 (Stüdyo)">1+0 (Stüdyo)</option>
+                            <option value="1+1">1+1</option>
+                            <option value="2+1">2+1</option>
+                            <option value="3+1">3+1</option>
+                            <option value="4+1">4+1</option>
+                            <option value="5+1 ve üzeri">5+1 ve üzeri</option>
+                            <option value="Villa">Villa</option>
+                            <option value="Ofis">Ofis</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <textarea name="message" id="contact_message" class="form-textarea" placeholder="Mesajınız *" rows="5" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> WhatsApp ile Gönder
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Sağ - İletişim Bilgileri -->
+            <div class="contact-info-wrapper">
+                <h3><i class="fas fa-address-card"></i> İletişim Bilgileri</h3>
+                
+                <div class="contact-info-list">
+                    <div class="contact-info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Adres</h4>
+                            <p>{{ about.address|default:"Aksaray Mahallesi Elazığ/Merkez" }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <div>
+                            <h4>Telefon</h4>
+                            <p>{{ about.phone|default:"0543 809 23 23" }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>E-Mail</h4>
+                            <p>{{ about.email|default:"ayyildiznakliyat.23@gmail.com" }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h4>Çalışma Saatleri</h4>
+                            <p>7 Gün 24 Saat Hizmetinizdeyiz</p>
+                        </div>
+                    </div>
+                    
+                    {% if about.whatsapp %}
+                    <div class="contact-info-item">
+                        <i class="fab fa-whatsapp"></i>
+                        <div>
+                            <h4>WhatsApp</h4>
+                            <p><a href="https://wa.me/{{ about.whatsapp }}" target="_blank" style="color: #25D366;">Hemen Yazın</a></p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Hızlı İletişim Bölümü -->
+                <h3 class="mt-3"><i class="fas fa-bolt"></i> Hızlı İletişim</h3>
+                
+                <div class="contact-info-list">
+                    <a href="https://g.page/r/Cdt73wzSYC82EAE/review" target="_blank" class="contact-info-item contact-action-item">
+                        <i class="fas fa-comment-dots"></i>
+                        <div>
+                            <h4>Yorum Yapın</h4>
+                            <p>Google'da bizi değerlendirin</p>
+                        </div>
+                    </a>
+                    
+                    <a href="tel:+905438092323" class="contact-info-item contact-action-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <div>
+                            <h4>Hemen Arayın</h4>
+                            <p>Şimdi bizi arayın</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://wa.me/905438092323" target="_blank" class="contact-info-item contact-action-item">
+                        <i class="fab fa-whatsapp"></i>
+                        <div>
+                            <h4>WhatsApp</h4>
+                            <p>Mesaj gönderin</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Google Maps -->
+        <div class="map-container mt-3">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3085.5!2d39.2191!3d38.6755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x407f5e5038e1d9d9%3A0x36602fd20cdf7bdb!2sAy%20Y%C4%B1ld%C4%B1z%20Nakliyat!5e0!3m2!1str!2str!4v1703850000000!5m2!1str!2str" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            <div class="map-overlay">
+                <a href="https://maps.app.goo.gl/7GNNFbyc42Dp4je7A" target="_blank" class="btn btn-primary">
+                    <i class="fas fa-external-link-alt"></i> Google Maps'te Aç
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// WhatsApp form gönderim fonksiyonu - contact.html için
+// Bu fonksiyon main.js'deki global fonksiyonu kullanır
+</script>
+{% endblock %}
