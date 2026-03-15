@@ -28,7 +28,11 @@
                     {% for slider in sliders %}
                     <tr>
                         <td>
+                            {% if slider.image %}
                             <img src="{{ slider.image.url }}" alt="{{ slider.title }}" class="thumb-preview">
+                            {% else %}
+                            <span class="text-muted">-</span>
+                            {% endif %}
                         </td>
                         <td>{{ slider.title|default:"-" }}</td>
                         <td>{{ slider.order }}</td>

@@ -595,14 +595,16 @@ a {
 .stat-warning .stat-icon { background: var(--warning-light); color: var(--warning); }
 .stat-purple .stat-icon { background: var(--purple-light); color: var(--purple); }
 
-.stat-info h3 {
+.stat-info h3,
+.stat-details h3 {
     font-size: 28px;
     font-weight: 700;
     line-height: 1;
     margin-bottom: 4px;
 }
 
-.stat-info p {
+.stat-info p,
+.stat-details p {
     font-size: 13px;
     color: var(--text-secondary);
     font-weight: 500;

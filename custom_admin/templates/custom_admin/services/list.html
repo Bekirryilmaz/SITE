@@ -29,7 +29,11 @@
                     {% for service in services %}
                     <tr>
                         <td>
+                            {% if service.image %}
                             <img src="{{ service.image.url }}" alt="{{ service.title }}" class="thumb-preview">
+                            {% else %}
+                            <span class="text-muted">-</span>
+                            {% endif %}
                         </td>
                         <td><strong>{{ service.title }}</strong></td>
                         <td><i class="fas {{ service.icon }}"></i> {{ service.icon }}</td>

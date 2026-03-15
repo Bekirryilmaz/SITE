@@ -130,8 +130,8 @@
                         <h4>İletişim</h4>
                         <ul class="contact-list">
                             <li><i class="fas fa-map-marker-alt"></i> {{ about.address|default:"Elazığ, Türkiye" }}</li>
-                            <li><i class="fas fa-phone"></i> <a href="tel:+905438092323">0543 809 23 23</a></li>
-                            <li><i class="fas fa-envelope"></i> <a href="mailto:ayyildiznakliyat.23@gmail.com">ayyildiznakliyat.23@gmail.com</a></li>
+                            <li><i class="fas fa-phone"></i> <a href="tel:+90{{ about.phone|default:'5438092323' }}">{{ about.phone|default:"0543 809 23 23" }}</a></li>
+                            <li><i class="fas fa-envelope"></i> <a href="mailto:{{ about.email|default:'ayyildiznakliyat.23@gmail.com' }}">{{ about.email|default:"ayyildiznakliyat.23@gmail.com" }}</a></li>
                             <li><i class="fas fa-comment-dots"></i> <a href="https://g.page/r/Cdt73wzSYC82EAE/review" target="_blank">Yorum Yapın</a></li>
                             <li><i class="fas fa-clock"></i> 7 Gün 24 Saat Hizmetinizdeyiz</li>
                         </ul>
@@ -151,7 +151,7 @@
         
         <div class="footer-bottom">
             <div class="container">
-                <p>&copy; 2025 {{ about.company_name|default:"Ay Yıldız Nakliyat" }}. Tüm hakları saklıdır.</p>
+                <p>&copy; {% now "Y" %} {{ about.company_name|default:"Ay Yıldız Nakliyat" }}. Tüm hakları saklıdır.</p>
                 <p class="developer-credit">
                     <i class="fas fa-code"></i> Tasarım & Geliştirme: <span>Ebubekir Yılmaz</span>
                     <a href="mailto:captain.cook.023@gmail.com" class="developer-email">

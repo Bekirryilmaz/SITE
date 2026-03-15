@@ -23,10 +23,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-1*!e+&0!)-2**+dse(jhuh#3wy#a^7by1r!k9m4x(402jgld8h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-# ALLOWED_HOSTS = ["134.209.199.175", "www.ayildiznakliyat.com", "ayildiznakliyat.com"]
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "134.209.199.175",
+    "www.ayildiznakliyat.com",
+    "ayildiznakliyat.com",
+]
 
 
 # Application definition
@@ -150,6 +155,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_files')
 
 # WhiteNoise: Static dosyaları sıkıştır (hash'siz, manifest sorunu olmaz)
 STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
