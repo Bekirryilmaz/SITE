@@ -1,0 +1,190 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ about.company_name|default:"Ay Yıldız Nakliyat" }}{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/media/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/media/favicon.ico">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Ana CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    {% block extra_head %}{% endblock %}
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BSFBWZKVQM"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-BSFBWZKVQM');
+    </script>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-main">
+            <div class="container">
+                <div class="header-main-content">
+                    <div class="logo">
+                        <a href="{% url 'home' %}">
+                            {% if about.logo %}
+                            <img src="{{ about.logo.url }}" alt="{{ about.company_name|default:'Ay Yıldız Nakliyat' }} Logo" class="logo-img">
+                            {% else %}
+                            <i class="fas fa-truck-moving logo-icon"></i>
+                            {% endif %}
+                            <h1>{{ about.company_name|default:"Ay Yıldız Nakliyat" }}</h1>
+                        </a>
+                    </div>
+                    
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
+                    
+                    <nav class="main-nav" id="mainNav">
+                        <ul>
+                            <li><a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"><span>Anasayfa</span></a></li>
+                            <li class="has-dropdown">
+                                <a href="{% url 'services' %}" class="nav-link {% if request.resolver_match.url_name == 'services' %}active{% endif %}">
+                                    <span>Hizmetlerimiz</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{% url 'services' %}?service=1"><i class="fas fa-house-chimney"></i> Evden Eve Nakliyat</a></li>
+                                    <li><a href="{% url 'services' %}?service=2"><i class="fas fa-city"></i> Şehirler Arası Nakliyat</a></li>
+                                    <li><a href="{% url 'services' %}?service=3"><i class="fas fa-building"></i> Ofis Taşımacılığı</a></li>
+                                    <li><a href="{% url 'services' %}?service=4"><i class="fas fa-box"></i> Paketleme Hizmeti</a></li>
+                                    <li><a href="{% url 'services' %}?service=5"><i class="fas fa-couch"></i> Mobilya Montaj</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{% url 'about' %}" class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}"><span>Hakkımızda</span></a></li>
+                            <li><a href="{% url 'gallery' %}" class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}"><span>Galeri</span></a></li>
+                            <li><a href="{% url 'guide' %}" class="nav-link {% if request.resolver_match.url_name == 'guide' %}active{% endif %}"><span>Taşınma Rehberi</span></a></li>
+                            <li><a href="{% url 'contact' %}" class="nav-link contact-btn {% if request.resolver_match.url_name == 'contact' %}active{% endif %}"><i class="fas fa-phone"></i> <span>İletişim</span></a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Ana İçerik -->
+    <main class="main-content">
+        {% if messages %}
+        <div class="messages-container">
+            <div class="container">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                    <button class="alert-close">&times;</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-main">
+            <div class="container">
+                <div class="footer-grid">
+                    <!-- Firma Bilgileri -->
+                    <div class="footer-section">
+                        <h3>{% if about.logo %}<img src="{{ about.logo.url }}" alt="Logo" class="footer-logo-img">{% else %}<i class="fas fa-truck-moving"></i>{% endif %} {{ about.company_name|default:"Ay Yıldız Nakliyat" }}</h3>
+                        <p>{{ about.short_content|default:"Profesyonel nakliye hizmetleri ile eşyalarınız güvende. Halis Yılmaz yönetiminde güvenilir taşımacılık." }}</p>
+                    </div>
+                    
+                    <!-- Hızlı Linkler -->
+                    <div class="footer-section">
+                        <h4>Hızlı Linkler</h4>
+                        <ul>
+                            <li><a href="{% url 'home' %}">Anasayfa</a></li>
+                            <li><a href="{% url 'services' %}">Hizmetlerimiz</a></li>
+                            <li><a href="{% url 'about' %}">Hakkımızda</a></li>
+                            <li><a href="{% url 'gallery' %}">Galeri</a></li>
+                            <li><a href="{% url 'contact' %}">İletişim</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- İletişim -->
+                    <div class="footer-section">
+                        <h4>İletişim</h4>
+                        <ul class="contact-list">
+                            <li><i class="fas fa-map-marker-alt"></i> {{ about.address|default:"Elazığ, Türkiye" }}</li>
+                            <li><i class="fas fa-phone"></i> <a href="tel:+905438092323">0543 809 23 23</a></li>
+                            <li><i class="fas fa-envelope"></i> <a href="mailto:ayyildiznakliyat.23@gmail.com">ayyildiznakliyat.23@gmail.com</a></li>
+                            <li><i class="fas fa-comment-dots"></i> <a href="https://g.page/r/Cdt73wzSYC82EAE/review" target="_blank">Yorum Yapın</a></li>
+                            <li><i class="fas fa-clock"></i> 7 Gün 24 Saat Hizmetinizdeyiz</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Sosyal Medya -->
+                    <div class="footer-section">
+                        <h4>Bizi Takip Edin</h4>
+                        <div class="footer-social">
+                            <!-- Sadece WhatsApp butonu aktif -->
+                            <a href="https://wa.me/905438092323" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2025 {{ about.company_name|default:"Ay Yıldız Nakliyat" }}. Tüm hakları saklıdır.</p>
+                <p class="developer-credit">
+                    <i class="fas fa-code"></i> Tasarım & Geliştirme: <span>Ebubekir Yılmaz</span>
+                    <a href="mailto:captain.cook.023@gmail.com" class="developer-email">
+                        <i class="fas fa-envelope"></i> captain.cook.023@gmail.com
+                    </a>
+                    <a href="https://www.linkedin.com/in/ebubekir-y%C4%B1lmaz-2691913a8" target="_blank" class="developer-linkedin" title="LinkedIn Profili">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Action Buttons -->
+    <div class="floating-buttons">
+        <!-- Yorum Yapın Butonu -->
+        <a href="https://g.page/r/Cdt73wzSYC82EAE/review" target="_blank" class="float-btn review-float" title="Google'da Yorum Yapın">
+            <i class="fas fa-comment-dots"></i>
+        </a>
+        
+        <!-- Hemen Arayın Butonu -->
+        <a href="tel:+905438092323" class="float-btn phone-float" title="Hemen Arayın">
+            <i class="fas fa-phone-alt"></i>
+        </a>
+        
+        <!-- WhatsApp Butonu -->
+        <a href="https://wa.me/{{ about.whatsapp|default:'905438092323' }}?text=Merhaba%20sitenizden%20ulaştım%20fiyat%20bilgisi%20almak%20istiyorum." target="_blank" class="float-btn whatsapp-float" title="WhatsApp ile iletişime geçin">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

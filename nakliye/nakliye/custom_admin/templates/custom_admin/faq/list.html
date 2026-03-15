@@ -1,0 +1,63 @@
+{% extends "custom_admin/base.html" %}
+
+{% block title %}SSS Yönetimi - Yönetim Paneli{% endblock %}
+{% block page_title %}SSS Yönetimi{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2><i class="fas fa-question-circle"></i> Sık Sorulan Sorular</h2>
+        <a href="{% url 'custom_admin:faq_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Yeni Soru
+        </a>
+    </div>
+    <div class="card-body">
+        {% if faqs %}
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Soru</th>
+                        <th>Sıra</th>
+                        <th>Durum</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for faq in faqs %}
+                    <tr>
+                        <td><strong>{{ faq.question|truncatewords:10 }}</strong></td>
+                        <td>{{ faq.order }}</td>
+                        <td>
+                            {% if faq.is_active %}
+                            <span class="status-badge status-active">Aktif</span>
+                            {% else %}
+                            <span class="status-badge status-inactive">Pasif</span>
+                            {% endif %}
+                        </td>
+                        <td class="actions">
+                            <a href="{% url 'custom_admin:faq_edit' faq.pk %}" class="btn btn-sm btn-outline">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form method="post" action="{% url 'custom_admin:faq_delete' faq.pk %}" class="inline-form" onsubmit="return confirm('Bu soruyu silmek istediğinize emin misiniz?')">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-question-circle"></i>
+            <p>Henüz SSS bulunmuyor.</p>
+            <a href="{% url 'custom_admin:faq_create' %}" class="btn btn-primary">İlk Soruyu Ekle</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Giriş - Yönetim Paneli</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'custom_admin/css/admin.css' %}">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h1>Yönetim Paneli</h1>
+                <p>Devam etmek için giriş yapın</p>
+            </div>
+
+            {% if messages %}
+            <div class="login-alerts">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <i class="fas {% if message.tags == 'error' %}fa-exclamation-circle{% elif message.tags == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="post" class="login-form" autocomplete="off">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_username">
+                        <i class="fas fa-user"></i>
+                    </label>
+                    {{ form.username }}
+                </div>
+                <div class="form-group">
+                    <label for="id_password">
+                        <i class="fas fa-lock"></i>
+                    </label>
+                    {{ form.password }}
+                </div>
+                <button type="submit" class="btn btn-primary btn-login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Giriş Yap
+                </button>
+            </form>
+        </div>
+        <div class="login-footer">
+            <p>&copy; 2025 Ay Yıldız Nakliyat - Yönetim Paneli</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+{% extends "custom_admin/base.html" %}
+
+{% block title %}Galeri Yönetimi - Yönetim Paneli{% endblock %}
+{% block page_title %}Galeri Yönetimi{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2><i class="fas fa-photo-video"></i> Galeri Resimleri</h2>
+        <div class="btn-group">
+            <a href="{% url 'custom_admin:gallery_upload_multi' %}" class="btn btn-success">
+                <i class="fas fa-cloud-upload-alt"></i> Toplu Yükle
+            </a>
+            <a href="{% url 'custom_admin:gallery_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Tek Resim Ekle
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if images %}
+        <div class="gallery-grid">
+            {% for image in images %}
+            <div class="gallery-item">
+                <div class="gallery-thumb">
+                    <img src="{{ image.image.url }}" alt="{{ image.title }}">
+                    <div class="gallery-overlay">
+                        <a href="{% url 'custom_admin:gallery_edit' image.pk %}" class="btn btn-sm btn-outline" title="Düzenle">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form method="post" action="{% url 'custom_admin:gallery_delete' image.pk %}" class="inline-form" onsubmit="return confirm('Bu resmi silmek istediğinize emin misiniz?')">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger" title="Sil">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="gallery-info">
+                    <span class="gallery-title">{{ image.title|default:"İsimsiz" }}</span>
+                    <span class="gallery-meta">
+                        Sıra: {{ image.order }}
+                        {% if image.is_active %}
+                        <span class="status-dot active"></span>
+                        {% else %}
+                        <span class="status-dot inactive"></span>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-photo-video"></i>
+            <p>Henüz galeri resmi bulunmuyor.</p>
+            <a href="{% url 'custom_admin:gallery_upload_multi' %}" class="btn btn-primary">Resim Yükle</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
