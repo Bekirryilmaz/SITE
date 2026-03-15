@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -146,6 +147,13 @@ NOTIFICATION_PHONE = '05438092323'
 
 import os
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_files')
+
+# WhiteNoise: Static dosyaları sıkıştır ve cache'le
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # ==========================================
 # Custom Admin Panel Ayarları
