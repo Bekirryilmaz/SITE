@@ -1,0 +1,95 @@
+{% extends "custom_admin/base.html" %}
+
+{% block title %}{{ title }} - Yönetim Paneli{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 700px;">
+    <div class="card-header">
+        <h2><i class="fas fa-concierge-bell"></i> {{ title }}</h2>
+        <a href="{% url 'custom_admin:service_list' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Geri
+        </a>
+    </div>
+    <div class="card-body">
+        {% if form.errors %}
+        <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i>
+            Lütfen hataları düzeltin.
+        </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% if edit_mode and obj.image %}
+            <div class="current-image">
+                <label>Mevcut Resim</label>
+                <img src="{{ obj.image.url }}" alt="{{ obj.title }}" class="preview-image">
+            </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label>Hizmet Adı *</label>
+                {{ form.title }}
+            </div>
+            <div class="form-group">
+                <label>Kısa Açıklama *</label>
+                {{ form.short_description }}
+            </div>
+            <div class="form-group">
+                <label>Detaylı Açıklama *</label>
+                {{ form.description }}
+            </div>
+            <div class="form-group">
+                <label>Resim {% if not edit_mode %}*{% endif %}</label>
+                {{ form.image }}
+                {% if edit_mode %}
+                <small style="color: #666; display: block; margin-top: 5px;">
+                    <i class="fas fa-info-circle"></i> Yeni resim yüklenmezse mevcut resim korunur.
+                </small>
+                {% endif %}
+                <div class="file-preview" id="filePreview"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-4">
+                    <label>İkon</label>
+                    {{ form.icon }}
+                    <small class="form-text">Örn: fa-truck, fa-box</small>
+                </div>
+                <div class="form-group col-4">
+                    <label>Sıra</label>
+                    {{ form.order }}
+                </div>
+                <div class="form-group col-4">
+                    <label class="form-check-label">
+                        {{ form.is_active }} Aktif
+                    </label>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Kaydet
+                </button>
+                <a href="{% url 'custom_admin:service_list' %}" class="btn btn-outline">İptal</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelector('input[type="file"]')?.addEventListener('change', function(e) {
+    const preview = document.getElementById('filePreview');
+    preview.innerHTML = '';
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.className = 'preview-image';
+        preview.appendChild(img);
+    }
+});
+</script>
+{% endblock %}

@@ -3,7 +3,7 @@ from django.db import models
 # Slider Resimleri
 class SliderImage(models.Model):
     title = models.CharField(max_length=200, verbose_name="Başlık", blank=True)
-    image = models.FileField(upload_to='slider/', verbose_name="Resim")
+    image = models.ImageField(upload_to='slider/', verbose_name="Resim")
     order = models.PositiveIntegerField(default=0, verbose_name="Sıra")
     is_active = models.BooleanField(default=True, verbose_name="Aktif")
 
@@ -21,7 +21,7 @@ class Service(models.Model):
     title = models.CharField(max_length=200, verbose_name="Hizmet Adı")
     short_description = models.TextField(verbose_name="Kısa Açıklama", max_length=300)
     description = models.TextField(verbose_name="Detaylı Açıklama")
-    image = models.FileField(upload_to='services/', verbose_name="Resim")
+    image = models.ImageField(upload_to='services/', verbose_name="Resim")
     icon = models.CharField(max_length=50, verbose_name="İkon (Font Awesome)", default="fa-truck")
     order = models.PositiveIntegerField(default=0, verbose_name="Sıra")
     is_active = models.BooleanField(default=True, verbose_name="Aktif")
@@ -38,7 +38,7 @@ class Service(models.Model):
 # Galeri
 class GalleryImage(models.Model):
     title = models.CharField(max_length=200, verbose_name="Başlık", blank=True)
-    image = models.FileField(upload_to='gallery/', verbose_name="Resim")
+    image = models.ImageField(upload_to='gallery/', verbose_name="Resim")
     order = models.PositiveIntegerField(default=0, verbose_name="Sıra")
     is_active = models.BooleanField(default=True, verbose_name="Aktif")
 
@@ -111,8 +111,8 @@ class AboutUs(models.Model):
     title = models.CharField(max_length=200, verbose_name="Başlık")
     short_content = models.TextField(verbose_name="Kısa İçerik (Anasayfa için)", max_length=500)
     full_content = models.TextField(verbose_name="Tam İçerik")
-    image = models.FileField(upload_to='about/', verbose_name="Resim", blank=True, null=True)
-    logo = models.FileField(upload_to='logo/', verbose_name="Logo", blank=True, null=True)
+    image = models.ImageField(upload_to='about/', verbose_name="Resim", blank=True, null=True)
+    logo = models.ImageField(upload_to='logo/', verbose_name="Logo", blank=True, null=True)
     
     # Firma Bilgileri
     company_name = models.CharField(max_length=200, verbose_name="Firma Adı", default="Nakliye Firması")

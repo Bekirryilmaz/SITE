@@ -1,0 +1,108 @@
+{% extends "custom_admin/base.html" %}
+
+{% block title %}Dashboard - Yönetim Paneli{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- İstatistik Kartları -->
+<div class="stats-grid">
+    <div class="stat-card stat-primary">
+        <div class="stat-icon"><i class="fas fa-images"></i></div>
+        <div class="stat-info">
+            <h3>{{ slider_count }}</h3>
+            <p>Slider</p>
+        </div>
+        <a href="{% url 'custom_admin:slider_list' %}" class="stat-link">Görüntüle <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="stat-card stat-success">
+        <div class="stat-icon"><i class="fas fa-concierge-bell"></i></div>
+        <div class="stat-info">
+            <h3>{{ service_count }}</h3>
+            <p>Hizmet</p>
+        </div>
+        <a href="{% url 'custom_admin:service_list' %}" class="stat-link">Görüntüle <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="stat-card stat-info">
+        <div class="stat-icon"><i class="fas fa-photo-video"></i></div>
+        <div class="stat-info">
+            <h3>{{ gallery_count }}</h3>
+            <p>Galeri</p>
+        </div>
+        <a href="{% url 'custom_admin:gallery_list' %}" class="stat-link">Görüntüle <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="stat-card stat-warning">
+        <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+        <div class="stat-info">
+            <h3>{{ message_count }}</h3>
+            <p>Mesaj</p>
+        </div>
+        <a href="{% url 'custom_admin:message_list' %}" class="stat-link">
+            {% if unread_messages > 0 %}
+            <span class="badge badge-danger">{{ unread_messages }} okunmamış</span>
+            {% endif %}
+            Görüntüle <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+    <div class="stat-card stat-purple">
+        <div class="stat-icon"><i class="fas fa-question-circle"></i></div>
+        <div class="stat-info">
+            <h3>{{ faq_count }}</h3>
+            <p>SSS</p>
+        </div>
+        <a href="{% url 'custom_admin:faq_list' %}" class="stat-link">Görüntüle <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Son Mesajlar -->
+<div class="card mt-4">
+    <div class="card-header">
+        <h2><i class="fas fa-envelope"></i> Son Mesajlar</h2>
+        <a href="{% url 'custom_admin:message_list' %}" class="btn btn-sm btn-outline">Tümünü Gör</a>
+    </div>
+    <div class="card-body">
+        {% if recent_messages %}
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Durum</th>
+                        <th>Ad Soyad</th>
+                        <th>Telefon</th>
+                        <th>Konu</th>
+                        <th>Tarih</th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for msg in recent_messages %}
+                    <tr class="{% if not msg.is_read %}row-unread{% endif %}">
+                        <td>
+                            {% if msg.is_read %}
+                            <span class="status-badge status-read"><i class="fas fa-check"></i></span>
+                            {% else %}
+                            <span class="status-badge status-unread"><i class="fas fa-circle"></i></span>
+                            {% endif %}
+                        </td>
+                        <td><strong>{{ msg.name }}</strong></td>
+                        <td>{{ msg.phone }}</td>
+                        <td>{{ msg.get_subject_display }}</td>
+                        <td>{{ msg.created_at|date:"d.m.Y H:i" }}</td>
+                        <td>
+                            <a href="{% url 'custom_admin:message_detail' msg.pk %}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>Henüz mesaj bulunmuyor.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

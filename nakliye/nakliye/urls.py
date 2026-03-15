@@ -14,14 +14,18 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 
+# Admin paneli route'u settings'den okunur (güvenlik için)
+ADMIN_ROUTE = getattr(settings, 'ADMIN_PANEL_ROUTE', 'gizli-yonetim-x7k9m2')
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # Eski /admin/ rotası kaldırıldı - güvenlik için
+    # Yeni admin paneli gizli, yapılandırılabilir route ile çalışır
+    path(f'{ADMIN_ROUTE}/', include('custom_admin.urls')),
     path('', include('core.urls')),
     path('sitemap.xml', TemplateView.as_view(template_name='sitemap.xml', content_type='application/xml')),
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),

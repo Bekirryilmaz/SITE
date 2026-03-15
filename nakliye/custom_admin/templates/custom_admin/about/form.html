@@ -1,0 +1,128 @@
+{% extends "custom_admin/base.html" %}
+
+{% block title %}Hakkımızda - Yönetim Paneli{% endblock %}
+{% block page_title %}Hakkımızda Düzenle{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 800px;">
+    <div class="card-header">
+        <h2><i class="fas fa-info-circle"></i> Hakkımızda & Firma Bilgileri</h2>
+    </div>
+    <div class="card-body">
+        {% if form.errors %}
+        <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i>
+            Lütfen hataları düzeltin.
+        </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-section">
+                <h3><i class="fas fa-building"></i> Firma Bilgileri</h3>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label>Firma Adı</label>
+                        {{ form.company_name }}
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Telefon</label>
+                        {{ form.phone }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label>E-posta</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Çalışma Saatleri</label>
+                        {{ form.working_hours }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Adres</label>
+                    {{ form.address }}
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3><i class="fas fa-file-alt"></i> İçerik</h3>
+                <div class="form-group">
+                    <label>Başlık</label>
+                    {{ form.title }}
+                </div>
+                <div class="form-group">
+                    <label>Kısa İçerik (Anasayfa)</label>
+                    {{ form.short_content }}
+                </div>
+                <div class="form-group">
+                    <label>Tam İçerik</label>
+                    {{ form.full_content }}
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3><i class="fas fa-image"></i> Görseller</h3>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label>Logo</label>
+                        {% if about and about.logo %}
+                        <div class="current-image small">
+                            <img src="{{ about.logo.url }}" alt="Logo" class="preview-image-small">
+                        </div>
+                        {% endif %}
+                        {{ form.logo }}
+                        <small style="color: #666; display: block; margin-top: 5px;">
+                            <i class="fas fa-info-circle"></i> Yeni logo yüklenmezse mevcut logo korunur.
+                        </small>
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Resim</label>
+                        {% if about and about.image %}
+                        <div class="current-image small">
+                            <img src="{{ about.image.url }}" alt="Resim" class="preview-image-small">
+                        </div>
+                        {% endif %}
+                        {{ form.image }}
+                        <small style="color: #666; display: block; margin-top: 5px;">
+                            <i class="fas fa-info-circle"></i> Yeni resim yüklenmezse mevcut resim korunur.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3><i class="fas fa-share-alt"></i> Sosyal Medya</h3>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label><i class="fab fa-facebook"></i> Facebook</label>
+                        {{ form.facebook }}
+                    </div>
+                    <div class="form-group col-6">
+                        <label><i class="fab fa-instagram"></i> Instagram</label>
+                        {{ form.instagram }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label><i class="fab fa-twitter"></i> Twitter</label>
+                        {{ form.twitter }}
+                    </div>
+                    <div class="form-group col-6">
+                        <label><i class="fab fa-whatsapp"></i> WhatsApp</label>
+                        {{ form.whatsapp }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -23,16 +23,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-1*!e+&0!)-2**+dse(jhuh#3wy#a^7by1r!k9m4x(402jgld8h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["134.209.199.175", "www.ayildiznakliyat.com", "ayildiznakliyat.com"]
-# ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ["134.209.199.175", "www.ayildiznakliyat.com", "ayildiznakliyat.com"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -40,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'core',
+    'custom_admin',  # Özel admin paneli
 ]
 
 MIDDLEWARE = [
@@ -50,6 +50,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'custom_admin.middleware.AdminRouteMaskMiddleware',       # Bilinen admin URL'lerini maskele
+    'custom_admin.middleware.AdminIPRestrictionMiddleware',    # IP bazlı erişim kısıtlama
 ]
 
 ROOT_URLCONF = 'nakliye.urls'
@@ -64,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'custom_admin.context_processors.admin_context',  # Admin panel context
             ],
         },
     },
@@ -117,10 +120,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
@@ -143,3 +146,29 @@ NOTIFICATION_PHONE = '05438092323'
 
 import os
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_files')
+
+# ==========================================
+# Custom Admin Panel Ayarları
+# ==========================================
+
+# Admin paneli gizli route - tahmin edilemez olmalı!
+# Bu değeri değiştirerek admin URL'ini özelleştirebilirsiniz.
+ADMIN_PANEL_ROUTE = os.environ.get('ADMIN_PANEL_ROUTE', 'gizli-yonetim-x7c8v9')
+
+# IP bazlı erişim kısıtlama (boş liste = tüm IP'lere açık)
+# Sadece belirli IP'lerden erişime izin vermek için:
+# ADMIN_ALLOWED_IPS = ['192.168.1.1', '10.0.0.1']
+ADMIN_ALLOWED_IPS = os.environ.get('ADMIN_ALLOWED_IPS', '').split(',') if os.environ.get('ADMIN_ALLOWED_IPS') else []
+
+# Brute-force koruması ayarları
+ADMIN_MAX_LOGIN_ATTEMPTS = int(os.environ.get('ADMIN_MAX_LOGIN_ATTEMPTS', 5))  # Maks başarısız deneme
+ADMIN_LOCKOUT_MINUTES = int(os.environ.get('ADMIN_LOCKOUT_MINUTES', 15))       # Kilitleme süresi (dk)
+
+# Güvenlik başlıkları
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_AGE = 3600  # 1 saat oturum süresi
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

@@ -1,0 +1,71 @@
+{% extends "custom_admin/base.html" %}
+
+{% block title %}Mesaj Detayı - Yönetim Paneli{% endblock %}
+{% block page_title %}Mesaj Detayı{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 700px;">
+    <div class="card-header">
+        <h2><i class="fas fa-envelope-open-text"></i> Mesaj Detayı</h2>
+        <a href="{% url 'custom_admin:message_list' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Geri
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="message-detail">
+            <div class="detail-row">
+                <div class="detail-label"><i class="fas fa-user"></i> Ad Soyad</div>
+                <div class="detail-value">{{ msg.name }}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label"><i class="fas fa-phone"></i> Telefon</div>
+                <div class="detail-value">
+                    <a href="tel:{{ msg.phone }}">{{ msg.phone }}</a>
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label"><i class="fas fa-envelope"></i> E-posta</div>
+                <div class="detail-value">
+                    {% if msg.email %}
+                    <a href="mailto:{{ msg.email }}">{{ msg.email }}</a>
+                    {% else %}
+                    Belirtilmedi
+                    {% endif %}
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label"><i class="fas fa-tag"></i> Konu</div>
+                <div class="detail-value">{{ msg.get_subject_display }}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label"><i class="fas fa-home"></i> Oda Sayısı</div>
+                <div class="detail-value">{{ msg.room_count }}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label"><i class="fas fa-clock"></i> Tarih</div>
+                <div class="detail-value">{{ msg.created_at|date:"d.m.Y H:i" }}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label"><i class="fas fa-comment"></i> Mesaj</div>
+                <div class="detail-value message-body">{{ msg.message|linebreaks }}</div>
+            </div>
+        </div>
+
+        <div class="form-actions mt-3">
+            <form method="post" action="{% url 'custom_admin:message_toggle_read' msg.pk %}" class="inline-form">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline">
+                    <i class="fas {% if msg.is_read %}fa-envelope{% else %}fa-envelope-open{% endif %}"></i>
+                    {% if msg.is_read %}Okunmadı İşaretle{% else %}Okundu İşaretle{% endif %}
+                </button>
+            </form>
+            <form method="post" action="{% url 'custom_admin:message_delete' msg.pk %}" class="inline-form" onsubmit="return confirm('Bu mesajı silmek istediğinize emin misiniz?')">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Sil
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

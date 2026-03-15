@@ -1,0 +1,52 @@
+{% extends "custom_admin/base.html" %}
+
+{% block title %}{{ title }} - Yönetim Paneli{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 700px;">
+    <div class="card-header">
+        <h2><i class="fas fa-question-circle"></i> {{ title }}</h2>
+        <a href="{% url 'custom_admin:faq_list' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Geri
+        </a>
+    </div>
+    <div class="card-body">
+        {% if form.errors %}
+        <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i>
+            Lütfen hataları düzeltin.
+        </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Soru *</label>
+                {{ form.question }}
+            </div>
+            <div class="form-group">
+                <label>Cevap *</label>
+                {{ form.answer }}
+            </div>
+            <div class="form-row">
+                <div class="form-group col-6">
+                    <label>Sıra</label>
+                    {{ form.order }}
+                </div>
+                <div class="form-group col-6">
+                    <label class="form-check-label">
+                        {{ form.is_active }} Aktif
+                    </label>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Kaydet
+                </button>
+                <a href="{% url 'custom_admin:faq_list' %}" class="btn btn-outline">İptal</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

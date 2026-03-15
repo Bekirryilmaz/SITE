@@ -1,0 +1,92 @@
+{% extends "custom_admin/base.html" %}
+
+{% block title %}Mesajlar - Yönetim Paneli{% endblock %}
+{% block page_title %}Mesaj Yönetimi{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2><i class="fas fa-envelope"></i> İletişim Mesajları</h2>
+        <div class="filter-tabs">
+            <a href="?filter=all" class="btn btn-sm {% if filter_type == 'all' %}btn-primary{% else %}btn-outline{% endif %}">
+                Tümü
+            </a>
+            <a href="?filter=unread" class="btn btn-sm {% if filter_type == 'unread' %}btn-primary{% else %}btn-outline{% endif %}">
+                Okunmamış
+            </a>
+            <a href="?filter=read" class="btn btn-sm {% if filter_type == 'read' %}btn-primary{% else %}btn-outline{% endif %}">
+                Okunmuş
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if messages_list %}
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th width="40">Durum</th>
+                        <th>Ad Soyad</th>
+                        <th>Telefon</th>
+                        <th>E-posta</th>
+                        <th>Konu</th>
+                        <th>Oda</th>
+                        <th>Tarih</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for msg in messages_list %}
+                    <tr class="{% if not msg.is_read %}row-unread{% endif %}">
+                        <td>
+                            {% if msg.is_read %}
+                            <span class="status-badge status-read" title="Okundu"><i class="fas fa-check"></i></span>
+                            {% else %}
+                            <span class="status-badge status-unread" title="Okunmadı"><i class="fas fa-circle"></i></span>
+                            {% endif %}
+                        </td>
+                        <td><strong>{{ msg.name }}</strong></td>
+                        <td>{{ msg.phone }}</td>
+                        <td>{{ msg.email|default:"-" }}</td>
+                        <td>{{ msg.get_subject_display }}</td>
+                        <td>{{ msg.room_count }}</td>
+                        <td>{{ msg.created_at|date:"d.m.Y H:i" }}</td>
+                        <td class="actions">
+                            <a href="{% url 'custom_admin:message_detail' msg.pk %}" class="btn btn-sm btn-primary" title="Detay">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <form method="post" action="{% url 'custom_admin:message_toggle_read' msg.pk %}" class="inline-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline" title="{% if msg.is_read %}Okunmadı İşaretle{% else %}Okundu İşaretle{% endif %}">
+                                    <i class="fas {% if msg.is_read %}fa-envelope{% else %}fa-envelope-open{% endif %}"></i>
+                                </button>
+                            </form>
+                            <form method="post" action="{% url 'custom_admin:message_delete' msg.pk %}" class="inline-form" onsubmit="return confirm('Bu mesajı silmek istediğinize emin misiniz?')">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger" title="Sil">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>
+            {% if filter_type == 'unread' %}
+                Okunmamış mesaj bulunmuyor.
+            {% elif filter_type == 'read' %}
+                Okunmuş mesaj bulunmuyor.
+            {% else %}
+                Henüz mesaj bulunmuyor.
+            {% endif %}
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
