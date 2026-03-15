@@ -1,0 +1,119 @@
+{% extends "custom_admin/base.html" %}
+
+{% block title %}{{ title }} - Yönetim Paneli{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 700px;">
+    <div class="card-header">
+        <h2><i class="fas fa-user-plus"></i> {{ title }}</h2>
+        <a href="{% url 'custom_admin:user_list' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Geri
+        </a>
+    </div>
+    <div class="card-body">
+        {% if form.errors %}
+        <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i>
+            {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-section">
+                <h3>Hesap Bilgileri</h3>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label>Kullanıcı Adı *</label>
+                        {{ form.username }}
+                    </div>
+                    <div class="form-group col-6">
+                        <label>E-posta</label>
+                        {{ form.email }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label>Ad</label>
+                        {{ form.first_name }}
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Soyad</label>
+                        {{ form.last_name }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label>Rol *</label>
+                        {{ form.role }}
+                    </div>
+                    <div class="form-group col-6">
+                        <label class="form-check-label">
+                            {{ form.is_active }} Aktif
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Şifre</h3>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label>Şifre {% if not edit_mode %}*{% endif %}</label>
+                        {{ form.password }}
+                        {% if edit_mode %}
+                        <small class="form-text">Boş bırakılırsa mevcut şifre korunur</small>
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Şifre Tekrar {% if not edit_mode %}*{% endif %}</label>
+                        {{ form.password_confirm }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Yetkiler</h3>
+                <p class="form-text mb-2">Superadmin rolü tüm yetkilere otomatik sahiptir.</p>
+                <div class="permissions-grid">
+                    <label class="permission-item">
+                        {{ form.can_manage_sliders }}
+                        <span>Slider Yönetimi</span>
+                    </label>
+                    <label class="permission-item">
+                        {{ form.can_manage_services }}
+                        <span>Hizmet Yönetimi</span>
+                    </label>
+                    <label class="permission-item">
+                        {{ form.can_manage_gallery }}
+                        <span>Galeri Yönetimi</span>
+                    </label>
+                    <label class="permission-item">
+                        {{ form.can_manage_messages }}
+                        <span>Mesaj Yönetimi</span>
+                    </label>
+                    <label class="permission-item">
+                        {{ form.can_manage_faq }}
+                        <span>SSS Yönetimi</span>
+                    </label>
+                    <label class="permission-item">
+                        {{ form.can_manage_about }}
+                        <span>Hakkımızda Yönetimi</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Kaydet
+                </button>
+                <a href="{% url 'custom_admin:user_list' %}" class="btn btn-outline">İptal</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

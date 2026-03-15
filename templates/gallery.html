@@ -1,0 +1,584 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Galeri - {{ about.company_name|default:"Ay Yıldız Nakliyat" }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-images"></i> Galeri</h1>
+        <p>Çalışmalarımızdan kareler</p>
+    </div>
+</section>
+
+<!-- Google Style Gallery -->
+<section class="google-gallery-section">
+    <div class="google-gallery-container">
+        <!-- Gallery Grid -->
+        <div class="google-gallery-grid" id="galleryGrid">
+            {% if images %}
+                {% for image in images %}
+                <div class="google-gallery-item" data-index="{{ forloop.counter0 }}" data-src="{{ image.image.url }}" data-title="{{ image.title|default:'Galeri Resmi' }}">
+                    <img src="{{ image.image.url }}" alt="{{ image.title|default:'Galeri Resmi' }}" loading="lazy">
+                    <div class="google-gallery-item-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Placeholder görseller -->
+                {% for i in "123456789012" %}
+                <div class="google-gallery-item placeholder-item">
+                    <div class="placeholder-content">
+                        <i class="fas fa-image"></i>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        {% if not images %}
+        <div class="text-center mt-3">
+            <p style="color: var(--text-light);">Galeri görselleri yakında eklenecektir.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Google Style Fullscreen Lightbox (Both Mobile & Desktop) -->
+<div class="google-lightbox" id="googleLightbox">
+    <div class="google-lightbox-backdrop"></div>
+    
+    <!-- Close Button (X) -->
+    <button class="google-lightbox-close" id="lightboxClose">
+        <i class="fas fa-times"></i>
+    </button>
+    
+    <!-- Navigation Arrows -->
+    <button class="google-lightbox-nav google-lightbox-prev" id="lightboxPrev">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="google-lightbox-nav google-lightbox-next" id="lightboxNext">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+    
+    <!-- Image Container -->
+    <div class="google-lightbox-image-container">
+        <img id="lightboxImage" src="" alt="">
+    </div>
+    
+    <!-- Bottom Info Bar -->
+    <div class="google-lightbox-info">
+        <span class="google-lightbox-title" id="lightboxTitle"></span>
+        <span class="google-lightbox-counter">
+            <span id="lightboxCurrent">1</span> / <span id="lightboxTotal">1</span>
+        </span>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ===== GOOGLE STYLE GALLERY ===== */
+.google-gallery-section {
+    padding: 30px 0 60px;
+    background: #f8f9fa;
+    min-height: calc(100vh - 300px);
+}
+
+.google-gallery-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+}
+
+/* Masonry Grid */
+.google-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-auto-rows: 10px;
+    gap: 16px;
+}
+
+.google-gallery-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #e0e0e0;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.google-gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.google-gallery-item:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    transform: translateY(-4px);
+    z-index: 10;
+}
+
+.google-gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+.google-gallery-item-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.6) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.google-gallery-item-overlay i {
+    color: white;
+    font-size: 32px;
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+}
+
+.google-gallery-item:hover .google-gallery-item-overlay {
+    opacity: 1;
+}
+
+.google-gallery-item:hover .google-gallery-item-overlay i {
+    transform: scale(1);
+}
+
+/* Placeholder Items */
+.placeholder-item {
+    background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+    grid-row-end: span 20;
+}
+
+.placeholder-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placeholder-content i {
+    font-size: 48px;
+    color: #bdbdbd;
+}
+
+/* ===== GOOGLE STYLE LIGHTBOX (Both Mobile & Desktop) ===== */
+.google-lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.95);
+}
+
+.google-lightbox.active {
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.google-lightbox-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+/* Close Button (X) - Google Style */
+.google-lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.google-lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.google-lightbox-close:active {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(0.95);
+}
+
+/* Navigation Arrows */
+.google-lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.google-lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.google-lightbox-nav:active {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-50%) scale(0.95);
+}
+
+.google-lightbox-prev {
+    left: 20px;
+}
+
+.google-lightbox-next {
+    right: 20px;
+}
+
+/* Image Container */
+.google-lightbox-image-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 100px 60px;
+    z-index: 10;
+    overflow: hidden;
+}
+
+#lightboxImage {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Bottom Info Bar */
+.google-lightbox-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 100;
+}
+
+.google-lightbox-title {
+    color: white;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.google-lightbox-counter {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1200px) {
+    .google-gallery-container {
+        max-width: 1200px;
+        padding: 0 40px;
+    }
+    
+    .google-gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 992px) {
+    .google-gallery-container {
+        padding: 0 30px;
+    }
+    
+    .google-gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 12px;
+    }
+    
+    .google-lightbox-image-container {
+        padding: 70px 80px 50px;
+    }
+}
+
+@media (max-width: 768px) {
+    .google-gallery-section {
+        padding: 20px 0 40px;
+    }
+    
+    .google-gallery-container {
+        padding: 0 12px;
+    }
+    
+    .google-gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        grid-auto-rows: 8px;
+        gap: 8px;
+    }
+    
+    .google-gallery-item {
+        border-radius: 8px;
+    }
+    
+    .google-gallery-item-overlay i {
+        font-size: 24px;
+    }
+    
+    /* Lightbox mobile adjustments */
+    .google-lightbox-close {
+        top: 15px;
+        right: 15px;
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+    
+    .google-lightbox-nav {
+        width: 44px;
+        height: 44px;
+        font-size: 16px;
+    }
+    
+    .google-lightbox-prev {
+        left: 10px;
+    }
+    
+    .google-lightbox-next {
+        right: 10px;
+    }
+    
+    .google-lightbox-image-container {
+        padding: 70px 15px 15px;
+        touch-action: pinch-zoom;
+    }
+    
+    #lightboxImage {
+        touch-action: pinch-zoom;
+    }
+    
+    .google-lightbox-info {
+        padding: 12px 16px;
+    }
+    
+    .google-lightbox-title {
+        font-size: 13px;
+    }
+    
+    .google-lightbox-counter {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .google-gallery-container {
+        padding: 0 8px;
+    }
+    
+    .google-gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 6px;
+    }
+    
+    .google-gallery-item {
+        border-radius: 6px;
+    }
+    
+    .google-gallery-item-overlay {
+        display: none;
+    }
+    
+    .google-lightbox-nav {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .google-lightbox-prev {
+        left: 8px;
+    }
+    
+    .google-lightbox-next {
+        right: 8px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ===== GALLERY DATA =====
+const galleryImages = [];
+let currentIndex = 0;
+
+// Collect all gallery images
+document.querySelectorAll('.google-gallery-item:not(.placeholder-item)').forEach((item, index) => {
+    const img = item.querySelector('img');
+    if (img) {
+        galleryImages.push({
+            src: item.dataset.src || img.src,
+            title: item.dataset.title || img.alt || 'Galeri Resmi',
+            element: item
+        });
+    }
+});
+
+// ===== MASONRY LAYOUT =====
+function applyMasonryLayout() {
+    const items = document.querySelectorAll('.google-gallery-item:not(.placeholder-item)');
+    items.forEach((item, index) => {
+        const img = item.querySelector('img');
+        if (img && img.complete) {
+            calculateSpan(item, img);
+        } else if (img) {
+            img.onload = () => calculateSpan(item, img);
+        }
+    });
+}
+
+function calculateSpan(item, img) {
+    // Calculate span based on image aspect ratio
+    const rowHeight = window.innerWidth <= 480 ? 6 : (window.innerWidth <= 768 ? 8 : 10);
+    const gap = window.innerWidth <= 480 ? 6 : (window.innerWidth <= 768 ? 8 : 16);
+    
+    // Get natural dimensions
+    const naturalWidth = img.naturalWidth || 300;
+    const naturalHeight = img.naturalHeight || 200;
+    const aspectRatio = naturalHeight / naturalWidth;
+    
+    // Calculate item width (approximate)
+    const containerWidth = item.parentElement.offsetWidth;
+    const columns = Math.floor(containerWidth / (window.innerWidth <= 480 ? 100 : (window.innerWidth <= 768 ? 140 : 220)));
+    const itemWidth = (containerWidth - (gap * (columns - 1))) / columns;
+    
+    // Calculate height based on aspect ratio
+    const itemHeight = itemWidth * aspectRatio;
+    const span = Math.ceil((itemHeight + gap) / (rowHeight + gap));
+    
+    // Clamp span to reasonable values
+    const clampedSpan = Math.max(12, Math.min(span, 40));
+    item.style.gridRowEnd = `span ${clampedSpan}`;
+}
+
+// ===== LIGHTBOX =====
+const lightbox = document.getElementById('googleLightbox');
+const lightboxImage = document.getElementById('lightboxImage');
+const lightboxTitle = document.getElementById('lightboxTitle');
+const lightboxCurrent = document.getElementById('lightboxCurrent');
+const lightboxTotal = document.getElementById('lightboxTotal');
+
+if (lightboxTotal) {
+    lightboxTotal.textContent = galleryImages.length;
+}
+
+function openLightbox(index) {
+    currentIndex = index;
+    updateLightbox();
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+function updateLightbox() {
+    const image = galleryImages[currentIndex];
+    if (lightboxImage) {
+        lightboxImage.src = image.src;
+        lightboxImage.alt = image.title;
+    }
+    if (lightboxTitle) {
+        lightboxTitle.textContent = image.title;
+    }
+    if (lightboxCurrent) {
+        lightboxCurrent.textContent = currentIndex + 1;
+    }
+}
+
+function nextImage() {
+    currentIndex = (currentIndex + 1) % galleryImages.length;
+    updateLightbox();
+}
+
+function prevImage() {
+    currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+    updateLightbox();
+}
+
+// Event Listeners - Gallery Items
+document.querySelectorAll('.google-gallery-item:not(.placeholder-item)').forEach((item, index) => {
+    item.addEventListener('click', () => openLightbox(index));
+});
+
+// Event Listeners - Lightbox Controls
+document.getElementById('lightboxClose')?.addEventListener('click', closeLightbox);
+document.getElementById('lightboxNext')?.addEventListener('click', nextImage);
+document.getElementById('lightboxPrev')?.addEventListener('click', prevImage);
+
+// Click on backdrop to close
+document.querySelector('.google-lightbox-backdrop')?.addEventListener('click', closeLightbox);
+
+// Keyboard Controls
+document.addEventListener('keydown', function(e) {
+    if (!lightbox?.classList.contains('active')) return;
+    
+    switch(e.key) {
+        case 'Escape':
+            closeLightbox();
+            break;
+        case 'ArrowRight':
+            nextImage();
+            break;
+        case 'ArrowLeft':
+            prevImage();
+            break;
+    }
+});
+
+// ===== INITIALIZE =====
+window.addEventListener('load', applyMasonryLayout);
+window.addEventListener('resize', applyMasonryLayout);
+</script>
+{% endblock %}

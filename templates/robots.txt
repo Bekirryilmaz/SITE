@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Admin paneli rotalarını engelle
+Disallow: /admin/
+Disallow: /gizli-yonetim-x7k9m2/
+Disallow: /wp-admin/
+Disallow: /dashboard/
+Disallow: /panel/
+
+Sitemap: https://ayildiznakliyat.com/sitemap.xml

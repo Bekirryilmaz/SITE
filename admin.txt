@@ -1,0 +1,74 @@
+===============================================
+        NAKLIYE YÖNETİM PANELİ
+        Admin Giriş Bilgileri
+===============================================
+
+📌 PANEL ERİŞİM ADRESİ
+-----------------------------------------------
+URL: http://localhost:8000/admin/
+     veya
+     http://[domain-adiniz]/admin/
+
+
+👤 GİRİŞ BİLGİLERİ
+-----------------------------------------------
+Kullanıcı Adı: admin
+Şifre: ******** (güvenlik nedeniyle gizli)
+
+NOT: Gerçek şifreyi site sahibinden veya 
+     proje yöneticisinden talep edin.
+
+
+📂 PANEL MODÜLLER
+-----------------------------------------------
+1. Slider Görselleri
+   - Anasayfa slider görsellerini yönetin
+   - Sıralama ve aktif/pasif durumu
+
+2. Hizmetler
+   - Sunulan hizmetleri düzenleyin
+   - İkon, başlık, açıklama
+
+3. Galeri
+   - Çalışma fotoğrafları
+   - Proje görselleri
+
+4. İletişim Mesajları
+   - Müşteri form mesajları
+   - Okundu/okunmadı takibi
+
+5. SSS (Sıkça Sorulan Sorular)
+   - Soru-cevap yönetimi
+
+6. Hakkımızda
+   - Firma bilgileri
+   - Logo, iletişim, açıklama
+
+
+🔐 GÜVENLİK ÖNERİLERİ
+-----------------------------------------------
+• Şifrenizi düzenli olarak değiştirin
+• Güçlü şifre kullanın (harf, rakam, sembol)
+• Oturumu kapatmayı unutmayın
+• Şifrenizi kimseyle paylaşmayın
+
+
+💻 TEKNİK BİLGİLER
+-----------------------------------------------
+Framework: Django 4.x
+Admin Panel: Django Admin (Özelleştirilmiş)
+Veritabanı: SQLite
+
+Süper kullanıcı oluşturmak için:
+> python manage.py createsuperuser
+
+
+📞 DESTEK
+-----------------------------------------------
+Teknik sorunlar için:
+E-Mail: captain.cook.023@gmail.com
+LinkedIn: linkedin.com/in/ebubekir-yılmaz-2691913a8
+
+===============================================
+        © 2025 - Tüm Hakları Saklıdır
+===============================================

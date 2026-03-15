@@ -1,0 +1,69 @@
+{% extends "custom_admin/base.html" %}
+
+{% block title %}Hizmet Yönetimi - Yönetim Paneli{% endblock %}
+{% block page_title %}Hizmet Yönetimi{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2><i class="fas fa-concierge-bell"></i> Hizmetler</h2>
+        <a href="{% url 'custom_admin:service_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Yeni Hizmet
+        </a>
+    </div>
+    <div class="card-body">
+        {% if services %}
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Önizleme</th>
+                        <th>Hizmet Adı</th>
+                        <th>İkon</th>
+                        <th>Sıra</th>
+                        <th>Durum</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in services %}
+                    <tr>
+                        <td>
+                            <img src="{{ service.image.url }}" alt="{{ service.title }}" class="thumb-preview">
+                        </td>
+                        <td><strong>{{ service.title }}</strong></td>
+                        <td><i class="fas {{ service.icon }}"></i> {{ service.icon }}</td>
+                        <td>{{ service.order }}</td>
+                        <td>
+                            {% if service.is_active %}
+                            <span class="status-badge status-active">Aktif</span>
+                            {% else %}
+                            <span class="status-badge status-inactive">Pasif</span>
+                            {% endif %}
+                        </td>
+                        <td class="actions">
+                            <a href="{% url 'custom_admin:service_edit' service.pk %}" class="btn btn-sm btn-outline">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form method="post" action="{% url 'custom_admin:service_delete' service.pk %}" class="inline-form" onsubmit="return confirm('Bu hizmeti silmek istediğinize emin misiniz?')">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-concierge-bell"></i>
+            <p>Henüz hizmet bulunmuyor.</p>
+            <a href="{% url 'custom_admin:service_create' %}" class="btn btn-primary">İlk Hizmeti Ekle</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
