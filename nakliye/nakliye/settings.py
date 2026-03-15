@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-1*!e+&0!)-2**+dse(jhuh#3wy#a^7by1r!k9m4x(402jgld8h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["134.209.199.175", "www.ayildiznakliyat.com", "ayildiznakliyat.com"]
-# ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ["134.209.199.175", "www.ayildiznakliyat.com", "ayildiznakliyat.com"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -148,10 +148,10 @@ NOTIFICATION_PHONE = '05438092323'
 import os
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_files')
 
-# WhiteNoise: Static dosyaları sıkıştır ve cache'le
+# WhiteNoise: Static dosyaları sıkıştır (hash'siz, manifest sorunu olmaz)
 STORAGES = {
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
 
