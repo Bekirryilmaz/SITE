@@ -1,0 +1,380 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Taşınma Rehberi - Nakliyat SSS ve İpuçları | {{ about.company_name|default:"Ay Yıldız Nakliyat" }}{% endblock %}
+
+{% block extra_head %}
+<!-- SEO Meta Tags -->
+<meta name="description" content="Taşınma rehberi: Evden eve nakliyat fiyatları, paketleme ipuçları ve sıkça sorulan sorular. Elazığ nakliyat hizmetleri hakkında bilgi alın.">
+<meta name="keywords" content="taşınma rehberi, nakliyat fiyatları, evden eve nakliyat, paketleme ipuçları, Elazığ nakliyat">
+
+<!-- FAQ Schema Markup for Google Rich Results -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Evden eve nakliyat fiyatları nasıl hesaplanır?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nakliyat fiyatları eşya miktarı, taşınma mesafesi, kat durumu, asansör varlığı, paketleme hizmeti ve taşınma gününe göre belirlenir. Ücretsiz keşif hizmetiyle net fiyat teklifi alabilirsiniz."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Taşınma işlemi ne kadar sürer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "1+1 daire 3-4 saat, 2+1 daire 4-6 saat, 3+1 daire 6-8 saat sürer. Şehirler arası taşınmalarda mesafeye göre süre değişir."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Asansörsüz binalarda nakliyat nasıl yapılır?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Asansör olmayan binalarda merdiven kullanılır veya gerekirse dış cephe asansörü (vinç/mobil asansör) hizmeti sunulur."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Elazığ'dan şehirler arası nakliyat yapıyor musunuz?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Evet, Elazığ'dan Türkiye'nin her iline şehirler arası evden eve nakliyat hizmeti veriyoruz. Parsiyel ve komple taşımacılık seçeneklerimiz mevcuttur."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Beyaz eşya taşıma nasıl yapılır?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Beyaz eşyalar özel koruma malzemeleriyle sarılarak taşınır. Buzdolabı 24 saat önce boşaltılmalı, çamaşır ve bulaşık makinelerinin suyu tahliye edilmelidir."
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-book-open"></i> Taşınma Rehberi</h1>
+        <p>Sıkça sorulan sorular ve taşınma ipuçları</p>
+    </div>
+</section>
+
+<!-- FAQ Content -->
+<section class="faq-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Sıkça Sorulan Sorular</h2>
+            <p>Merak ettiğiniz tüm soruların cevapları burada</p>
+            <div class="underline"></div>
+        </div>
+        
+        <div class="faq-list">
+            {% if faqs %}
+                {% for faq in faqs %}
+                <div class="faq-item">
+                    <button class="faq-question">
+                        {{ faq.question }}
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            {{ faq.answer|linebreaks }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Placeholder SSS -->
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Taşınma öncesi neler yapmalıyım?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Taşınma öncesinde yapmanız gerekenler:</p>
+                            <ul style="list-style: disc; margin-left: 20px;">
+                                <li>Kullanmadığınız eşyaları ayıklayın</li>
+                                <li>Kırılacak eşyaları önceden belirleyin</li>
+                                <li>Değerli eşyalarınızı ayrı paketleyin</li>
+                                <li>Yeni adresinize elektrik, su, doğalgaz nakil işlemlerini yaptırın</li>
+                                <li>Komşularınıza ve site yönetimine bilgi verin</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Nakliye ücretleri nasıl belirleniyor?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Nakliye ücretleri çeşitli faktörlere göre belirlenir:</p>
+                            <ul style="list-style: disc; margin-left: 20px;">
+                                <li>Eşya miktarı (oda sayısı)</li>
+                                <li>Taşınma mesafesi</li>
+                                <li>Kat durumu ve asansör varlığı</li>
+                                <li>Paketleme hizmeti istenip istenmediği</li>
+                                <li>Taşınma günü (hafta içi/sonu)</li>
+                            </ul>
+                            <p>Ücretsiz keşif hizmetimizle net fiyat teklifi alabilirsiniz.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Taşınma ne kadar sürer?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Taşınma süresi eşya miktarına ve mesafeye göre değişir:</p>
+                            <ul style="list-style: disc; margin-left: 20px;">
+                                <li>1+1 daire: 3-4 saat</li>
+                                <li>2+1 daire: 4-6 saat</li>
+                                <li>3+1 daire: 6-8 saat</li>
+                                <li>Şehirler arası taşınmalarda mesafeye göre süre değişir</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Hangi ödeme yöntemlerini kabul ediyorsunuz?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Nakit, kredi kartı ve havale/EFT ile ödeme yapabilirsiniz. Kredi kartına taksit imkanımız da bulunmaktadır.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Beyaz eşyalarım nasıl taşınır?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Beyaz eşyalar özel koruma malzemeleriyle sarılarak taşınır. Buzdolabı taşınmadan önce en az 24 saat önceden boşaltılmalı ve fişi çekilmelidir. Çamaşır ve bulaşık makineleri için su tahliye işlemi yapılmalıdır.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Asansör yoksa ne olur?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Asansör olmayan binalarda merdiven kullanılır veya gerekirse dış cephe asansörü (vinç) hizmeti sunulur. Bu durumlar keşif sırasında belirlenir ve fiyata yansıtılır.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SEO Uyumlu Ek Sorular -->
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Elazığ'dan şehirler arası nakliyat yapıyor musunuz?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Evet, <strong>Elazığ'dan Türkiye'nin her iline şehirler arası evden eve nakliyat</strong> hizmeti veriyoruz. Hizmet verdiğimiz başlıca iller:</p>
+                            <ul style="list-style: disc; margin-left: 20px;">
+                                <li>İstanbul, Ankara, İzmir</li>
+                                <li>Malatya, Diyarbakır, Batman</li>
+                                <li>Gaziantep, Adana, Mersin</li>
+                                <li>Antalya, Bursa, Konya</li>
+                            </ul>
+                            <p>Parsiyel ve komple taşımacılık seçeneklerimiz mevcuttur.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Evden eve nakliyat fiyatları 2025 ne kadar?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p><strong>2025 yılı evden eve nakliyat fiyatları</strong> birçok faktöre göre değişiklik gösterir:</p>
+                            <ul style="list-style: disc; margin-left: 20px;">
+                                <li><strong>Şehir içi taşınma:</strong> Eşya miktarı ve kat durumuna göre değişir</li>
+                                <li><strong>Şehirler arası:</strong> Mesafe ve tonaj üzerinden hesaplanır</li>
+                                <li><strong>Paketleme dahil:</strong> Ek paketleme ücreti uygulanır</li>
+                            </ul>
+                            <p>Net fiyat için <strong>ücretsiz keşif</strong> hizmetimizden yararlanabilirsiniz. WhatsApp üzerinden hızlı fiyat teklifi alabilirsiniz.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Piyano ve antika eşya taşıma yapıyor musunuz?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p><strong>Piyano taşıma</strong> ve <strong>antika eşya taşıma</strong> konusunda uzman ekibimiz bulunmaktadır. Bu tür hassas eşyalar için:</p>
+                            <ul style="list-style: disc; margin-left: 20px;">
+                                <li>Özel koruyucu malzemeler kullanılır</li>
+                                <li>Deneyimli personel görevlendirilir</li>
+                                <li>Gerekirse vinç/asansör hizmeti sağlanır</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Ofis ve işyeri taşıma hizmeti veriyor musunuz?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Evet, <strong>ofis taşıma</strong> ve <strong>işyeri nakliyatı</strong> hizmetlerimiz mevcuttur:</p>
+                            <ul style="list-style: disc; margin-left: 20px;">
+                                <li>Bilgisayar ve elektronik cihazlar özel paketlenir</li>
+                                <li>Dosya ve evraklar düzenli şekilde taşınır</li>
+                                <li>Hafta sonu taşıma ile iş kaybı minimuma indirilir</li>
+                                <li>Montaj/demontaj hizmeti sunulur</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Taşınma günü dikkat edilmesi gerekenler nelerdir?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p><strong>Taşınma günü</strong> sorunsuz geçmesi için dikkat etmeniz gerekenler:</p>
+                            <ul style="list-style: disc; margin-left: 20px;">
+                                <li>Değerli eşyalarınızı (mücevher, para, önemli belgeler) yanınızda bulundurun</li>
+                                <li>İlaç ve kişisel bakım ürünlerini ayrı bir çantada hazırlayın</li>
+                                <li>Çocuk ve evcil hayvanlarınız için düzenleme yapın</li>
+                                <li>Eski ve yeni evinizde sayaç okumalarını kaydedin</li>
+                                <li>Anahtarları ve kapı şifrelerini hazır bulundurun</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Nakliyat için en uygun gün hangisidir?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p><strong>En uygun taşınma günü</strong> seçimi için önerilerimiz:</p>
+                            <ul style="list-style: disc; margin-left: 20px;">
+                                <li><strong>Hafta içi (Salı-Çarşamba-Perşembe):</strong> Genellikle daha uygun fiyatlı</li>
+                                <li><strong>Ay ortası:</strong> Ay başı ve sonu yoğunluğundan kaçının</li>
+                                <li><strong>İlkbahar ve sonbahar:</strong> Hava koşulları daha uygun</li>
+                                <li><strong>Sabah erken saatler:</strong> Trafik yoğunluğu az, daha verimli</li>
+                            </ul>
+                            <p>Hafta sonu ve tatil günlerinde yoğunluk nedeniyle erken rezervasyon önerilir.</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Taşınma İpuçları -->
+<section class="section" style="background: var(--bg-light);">
+    <div class="container">
+        <div class="section-header">
+            <h2>Taşınma İpuçları</h2>
+            <p>Kolay ve stressiz bir taşınma için önerilerimiz</p>
+            <div class="underline"></div>
+        </div>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-card-content">
+                    <div class="service-card-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>Erken Planlama</h3>
+                    <p>Taşınma tarihinden en az 2-3 hafta önce hazırlıklara başlayın. Nakliye firması randevusunu önceden alın.</p>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-card-content">
+                    <div class="service-card-icon">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <h3>Doğru Paketleme</h3>
+                    <p>Kırılacak eşyaları özenle sarın, kutuların üzerine içindekini yazın. Ağır eşyaları küçük kutulara koyun.</p>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-card-content">
+                    <div class="service-card-icon">
+                        <i class="fas fa-broom"></i>
+                    </div>
+                    <h3>Ayıklama Yapın</h3>
+                    <p>Kullanmadığınız eşyaları bağışlayın veya satın. Daha az eşya, daha kolay ve ucuz taşınma demektir.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="section" style="background: var(--primary-color); color: white; text-align: center;">
+    <div class="container">
+        <h2 style="margin-bottom: 15px;">Hâlâ sorularınız mı var?</h2>
+        <p style="margin-bottom: 25px; opacity: 0.9;">Bize ulaşın, tüm sorularınızı yanıtlayalım.</p>
+        <a href="{% url 'contact' %}" class="btn" style="background: white; color: var(--primary-color);">
+            <i class="fas fa-comments"></i> İletişime Geç
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// FAQ Accordion
+document.querySelectorAll('.faq-question').forEach(button => {
+    button.addEventListener('click', () => {
+        const faqItem = button.parentElement;
+        const isActive = faqItem.classList.contains('active');
+        
+        // Tüm FAQ'ları kapat
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        // Tıklanan FAQ'ı aç (kapalıysa)
+        if (!isActive) {
+            faqItem.classList.add('active');
+        }
+    });
+});
+</script>
+{% endblock %}
