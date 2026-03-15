@@ -1,0 +1,167 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | Nakliye Yönetim Paneli{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<!-- Google Fonts - Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Font Awesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Modern Admin Panel Stil Dosyası -->
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+{% endblock %}
+
+{% block branding %}
+<div class="admin-branding">
+    <a href="{% url 'admin:index' %}" class="brand-link">
+        <div class="brand-icon">
+            <i class="fas fa-truck-moving"></i>
+        </div>
+        <div class="brand-text">
+            <span class="brand-name">Nakliye</span>
+            <span class="brand-subtitle">Yönetim Paneli</span>
+        </div>
+    </a>
+</div>
+{% endblock %}
+
+{% block nav-global %}
+<!-- Sidebar Navigation -->
+<nav class="admin-sidebar" id="adminSidebar">
+    <div class="sidebar-header">
+        <a href="{% url 'admin:index' %}" class="sidebar-brand">
+            <i class="fas fa-truck-moving"></i>
+            <span>Nakliye Panel</span>
+        </a>
+        <button class="sidebar-toggle" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+    
+    <div class="sidebar-menu">
+        <!-- Ana Menü -->
+        <div class="menu-section">
+            <span class="menu-label">Ana Menü</span>
+            <ul class="menu-list">
+                <li class="menu-item">
+                    <a href="{% url 'admin:index' %}" class="menu-link {% if request.path == '/admin/' %}active{% endif %}">
+                        <i class="fas fa-home"></i>
+                        <span>Anasayfa</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- İçerik Yönetimi -->
+        <div class="menu-section">
+            <span class="menu-label">İçerik Yönetimi</span>
+            <ul class="menu-list">
+                <li class="menu-item">
+                    <a href="{% url 'admin:core_sliderimage_changelist' %}" class="menu-link {% if 'sliderimage' in request.path %}active{% endif %}">
+                        <i class="fas fa-images"></i>
+                        <span>Slider Görselleri</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'admin:core_service_changelist' %}" class="menu-link {% if 'service' in request.path %}active{% endif %}">
+                        <i class="fas fa-concierge-bell"></i>
+                        <span>Hizmetler</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'admin:core_galleryimage_changelist' %}" class="menu-link {% if 'galleryimage' in request.path %}active{% endif %}">
+                        <i class="fas fa-photo-video"></i>
+                        <span>Galeri</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'admin:core_faq_changelist' %}" class="menu-link {% if 'faq' in request.path %}active{% endif %}">
+                        <i class="fas fa-question-circle"></i>
+                        <span>SSS</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- İletişim -->
+        <div class="menu-section">
+            <span class="menu-label">İletişim</span>
+            <ul class="menu-list">
+                <li class="menu-item">
+                    <a href="{% url 'admin:core_contactmessage_changelist' %}" class="menu-link {% if 'contactmessage' in request.path %}active{% endif %}">
+                        <i class="fas fa-envelope"></i>
+                        <span>Mesajlar</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Ayarlar -->
+        <div class="menu-section">
+            <span class="menu-label">Ayarlar</span>
+            <ul class="menu-list">
+                <li class="menu-item">
+                    <a href="{% url 'admin:core_aboutus_changelist' %}" class="menu-link {% if 'aboutus' in request.path %}active{% endif %}">
+                        <i class="fas fa-building"></i>
+                        <span>Firma Bilgileri</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="sidebar-footer">
+        <a href="/" target="_blank" class="view-site-btn">
+            <i class="fas fa-external-link-alt"></i>
+            <span>Siteyi Görüntüle</span>
+        </a>
+    </div>
+</nav>
+
+<!-- Mobile Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+{% endblock %}
+
+{% block usertools %}
+<div class="admin-usertools">
+    {% if user.is_active and user.is_staff %}
+    <div class="user-info">
+        <div class="user-avatar">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="user-details">
+            <span class="user-name">{{ user.get_username }}</span>
+            <span class="user-role">Yönetici</span>
+        </div>
+    </div>
+    <div class="user-actions">
+        <a href="{% url 'admin:password_change' %}" title="Şifre Değiştir">
+            <i class="fas fa-key"></i>
+        </a>
+        <a href="{% url 'admin:logout' %}" title="Çıkış Yap">
+            <i class="fas fa-sign-out-alt"></i>
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+
+{% block footer %}
+<div class="admin-footer">
+    <p>© 2025 Nakliye Yönetim Paneli | Tasarım & Geliştirme: <strong>Ebubekir Yılmaz</strong></p>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+{{ block.super }}
+<script src="{% static 'js/admin.js' %}"></script>
+{% endblock %}

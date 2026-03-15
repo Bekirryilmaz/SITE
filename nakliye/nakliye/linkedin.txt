@@ -1,0 +1,21 @@
+Bir nakliye firması için full-stack web sitesi geliştirdim.
+
+Proje Detayları:
+• Backend: Django (Python)
+• Frontend: HTML, CSS, JavaScript
+• Veritabanı: SQLite
+• Dinamik içerik yönetimi için admin paneli
+• SEO optimizasyonu (sitemap, robots.txt)
+• Responsive tasarım
+
+Sitede ana sayfa, hizmetler, galeri, hakkımızda, iletişim ve nakliye rehberi sayfaları bulunuyor. 
+Tüm içerikler admin panelinden yönetilebilir şekilde tasarlandı.
+
+Bu projede özellikle Django'nun model yapısını, 
+form handling mekanizmasını ve medya dosyası yönetimini pratiğe döktüm. 
+Gerçek bir iş ihtiyacına çözüm üretmek, 
+teorik bilgiyi somut bir ürüne dönüştürmek açısından çok öğretici oldu.
+
+
+#Django #Python #WebDevelopment #FullStack #SoftwareDevelopment 
+#WebDesign #BackendDevelopment #FrontendDevelopment #Coding #TechProjects

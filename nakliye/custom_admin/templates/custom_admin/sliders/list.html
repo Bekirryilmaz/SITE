@@ -1,0 +1,67 @@
+{% extends "custom_admin/base.html" %}
+
+{% block title %}Slider Yönetimi - Yönetim Paneli{% endblock %}
+{% block page_title %}Slider Yönetimi{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2><i class="fas fa-images"></i> Slider Resimleri</h2>
+        <a href="{% url 'custom_admin:slider_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Yeni Slider
+        </a>
+    </div>
+    <div class="card-body">
+        {% if sliders %}
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Önizleme</th>
+                        <th>Başlık</th>
+                        <th>Sıra</th>
+                        <th>Durum</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for slider in sliders %}
+                    <tr>
+                        <td>
+                            <img src="{{ slider.image.url }}" alt="{{ slider.title }}" class="thumb-preview">
+                        </td>
+                        <td>{{ slider.title|default:"-" }}</td>
+                        <td>{{ slider.order }}</td>
+                        <td>
+                            {% if slider.is_active %}
+                            <span class="status-badge status-active">Aktif</span>
+                            {% else %}
+                            <span class="status-badge status-inactive">Pasif</span>
+                            {% endif %}
+                        </td>
+                        <td class="actions">
+                            <a href="{% url 'custom_admin:slider_edit' slider.pk %}" class="btn btn-sm btn-outline">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form method="post" action="{% url 'custom_admin:slider_delete' slider.pk %}" class="inline-form" onsubmit="return confirm('Bu slider\'ı silmek istediğinize emin misiniz?')">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-images"></i>
+            <p>Henüz slider bulunmuyor.</p>
+            <a href="{% url 'custom_admin:slider_create' %}" class="btn btn-primary">İlk Slider'ı Ekle</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

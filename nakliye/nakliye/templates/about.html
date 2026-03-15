@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Hakkımızda - {{ about.company_name|default:"Ay Yıldız Nakliyat" }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-info-circle"></i> Hakkımızda</h1>
+        <p>Bizi daha yakından tanıyın</p>
+    </div>
+</section>
+
+<!-- About Content -->
+<section class="section">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>{{ about.title|default:"Güvenilir Nakliye Partneri" }}</h2>
+                
+                {% if about.full_content %}
+                    {{ about.full_content|linebreaks }}
+                {% else %}
+                    <p>Yılların deneyimi ve profesyonel ekibimizle, nakliye sektöründe güvenilir bir isim olduk. Müşteri memnuniyetini her zaman ön planda tutarak, eşyalarınızı özenle ve güvenle taşıyoruz.</p>
+                    
+                    <p>Firmamız, modern araç filomuz ve uzman personelimizle Türkiye'nin her noktasına hizmet vermektedir. Evden eve nakliyat, ofis taşımacılığı, şehirler arası nakliyat gibi tüm taşımacılık ihtiyaçlarınızda yanınızdayız.</p>
+                    
+                    <h3 style="margin-top: 30px; margin-bottom: 15px;">Neden Bizi Tercih Etmelisiniz?</h3>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 10px;"><i class="fas fa-check-circle" style="color: var(--primary-color); margin-right: 10px;"></i> Profesyonel ve deneyimli ekip</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-check-circle" style="color: var(--primary-color); margin-right: 10px;"></i> Sigortalı taşımacılık</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-check-circle" style="color: var(--primary-color); margin-right: 10px;"></i> Modern araç filosu</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-check-circle" style="color: var(--primary-color); margin-right: 10px;"></i> Ücretsiz keşif hizmeti</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-check-circle" style="color: var(--primary-color); margin-right: 10px;"></i> 7/24 müşteri desteği</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-check-circle" style="color: var(--primary-color); margin-right: 10px;"></i> Uygun fiyat garantisi</li>
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="about-image">
+                {% if about.image %}
+                <img src="{{ about.image.url }}" alt="{{ about.title }}">
+                {% else %}
+                <div class="placeholder-image" style="height:450px;">
+                    <i class="fas fa-truck-moving"></i>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- İstatistikler -->
+<section class="section" style="background: var(--bg-light);">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; text-align: center;">
+            <div>
+                <div style="font-size: 48px; color: var(--primary-color); margin-bottom: 10px;">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <h3 style="font-size: 36px; color: var(--text-dark);">500+</h3>
+                <p style="color: var(--text-light);">Başarılı Taşıma</p>
+            </div>
+            <div>
+                <div style="font-size: 48px; color: var(--primary-color); margin-bottom: 10px;">
+                    <i class="fas fa-smile"></i>
+                </div>
+                <h3 style="font-size: 36px; color: var(--text-dark);">480+</h3>
+                <p style="color: var(--text-light);">Mutlu Müşteri</p>
+            </div>
+            <div>
+                <div style="font-size: 48px; color: var(--primary-color); margin-bottom: 10px;">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 style="font-size: 36px; color: var(--text-dark);">12</h3>
+                <p style="color: var(--text-light);">Uzman Personel</p>
+            </div>
+            <div>
+                <div style="font-size: 48px; color: var(--primary-color); margin-bottom: 10px;">
+                    <i class="fas fa-award"></i>
+                </div>
+                <h3 style="font-size: 36px; color: var(--text-dark);">8+</h3>
+                <p style="color: var(--text-light);">Yıllık Deneyim</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="section" style="background: var(--primary-color); color: white; text-align: center;">
+    <div class="container">
+        <h2 style="margin-bottom: 15px;">Taşınmaya Hazır mısınız?</h2>
+        <p style="margin-bottom: 25px; opacity: 0.9;">Hemen ücretsiz keşif randevusu alın!</p>
+        <a href="{% url 'contact' %}" class="btn" style="background: white; color: var(--primary-color);">
+            <i class="fas fa-calendar-check"></i> Randevu Al
+        </a>
+    </div>
+</section>
+{% endblock %}

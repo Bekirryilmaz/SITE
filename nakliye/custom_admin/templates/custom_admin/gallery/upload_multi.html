@@ -1,0 +1,214 @@
+{% extends "custom_admin/base.html" %}
+
+{% block title %}Toplu Resim Yükleme - Yönetim Paneli{% endblock %}
+{% block page_title %}Toplu Resim Yükleme{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2><i class="fas fa-cloud-upload-alt"></i> Toplu Resim Yükleme</h2>
+        <a href="{% url 'custom_admin:gallery_list' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Galeriye Dön
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="dropzone" id="dropzone">
+            <div class="dropzone-content">
+                <i class="fas fa-cloud-upload-alt dropzone-icon"></i>
+                <h3>Dosyaları sürükleyip bırakın</h3>
+                <p>veya</p>
+                <label class="btn btn-primary btn-file">
+                    <i class="fas fa-folder-open"></i> Dosya Seç
+                    <input type="file" id="fileInput" multiple accept="image/*" hidden>
+                </label>
+                <p class="dropzone-hint">
+                    Desteklenen formatlar: JPG, PNG, WebP, AVIF, GIF • Maks. 10MB
+                </p>
+            </div>
+        </div>
+
+        <!-- Yükleme İlerleme -->
+        <div class="upload-progress" id="uploadProgress" style="display: none;">
+            <h3><i class="fas fa-spinner fa-spin"></i> Yükleniyor...</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText">0 / 0 dosya yüklendi</p>
+        </div>
+
+        <!-- Önizleme Alanı -->
+        <div class="upload-preview" id="uploadPreview"></div>
+
+        <!-- Sonuç -->
+        <div class="upload-result" id="uploadResult" style="display: none;">
+            <div class="alert alert-success" id="uploadSuccess" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText"></span>
+            </div>
+            <div class="alert alert-error" id="uploadErrors" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText"></span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const preview = document.getElementById('uploadPreview');
+    const progressSection = document.getElementById('uploadProgress');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const resultSection = document.getElementById('uploadResult');
+    const successDiv = document.getElementById('uploadSuccess');
+    const errorsDiv = document.getElementById('uploadErrors');
+    const successText = document.getElementById('successText');
+    const errorText = document.getElementById('errorText');
+
+    let selectedFiles = [];
+
+    // Drag & Drop Events
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, () => dropzone.classList.add('dragover'));
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, () => dropzone.classList.remove('dragover'));
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+        const files = [...e.dataTransfer.files].filter(f => f.type.startsWith('image/'));
+        handleFiles(files);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        handleFiles([...e.target.files]);
+    });
+
+    function handleFiles(files) {
+        selectedFiles = files;
+        showPreviews(files);
+        if (files.length > 0) {
+            uploadFiles(files);
+        }
+    }
+
+    function showPreviews(files) {
+        preview.innerHTML = '';
+        files.forEach((file, index) => {
+            const div = document.createElement('div');
+            div.className = 'preview-item';
+            div.id = `preview-${index}`;
+
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+
+            const info = document.createElement('div');
+            info.className = 'preview-info';
+            info.innerHTML = `
+                <span class="preview-name">${file.name}</span>
+                <span class="preview-size">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                <span class="preview-status" id="status-${index}">
+                    <i class="fas fa-clock"></i> Bekliyor
+                </span>
+            `;
+
+            div.appendChild(img);
+            div.appendChild(info);
+            preview.appendChild(div);
+        });
+    }
+
+    function uploadFiles(files) {
+        progressSection.style.display = 'block';
+        resultSection.style.display = 'none';
+
+        const formData = new FormData();
+        files.forEach(file => formData.append('files', file));
+
+        // CSRF Token
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
+                          getCookie('csrftoken');
+        
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '{% url "custom_admin:api_upload_multi" %}');
+        xhr.setRequestHeader('X-CSRFToken', csrfToken);
+
+        xhr.upload.onprogress = function(e) {
+            if (e.lengthComputable) {
+                const percent = Math.round((e.loaded / e.total) * 100);
+                progressFill.style.width = percent + '%';
+                progressText.textContent = `%${percent} yüklendi...`;
+            }
+        };
+
+        xhr.onload = function() {
+            progressSection.style.display = 'none';
+            resultSection.style.display = 'block';
+
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                
+                if (data.total_uploaded > 0) {
+                    successDiv.style.display = 'flex';
+                    successText.textContent = `${data.total_uploaded} resim başarıyla yüklendi.`;
+                    
+                    // Preview'ları güncelle
+                    data.uploaded.forEach((item, i) => {
+                        const status = document.getElementById(`status-${i}`);
+                        if (status) {
+                            status.innerHTML = '<i class="fas fa-check" style="color: #22c55e;"></i> Yüklendi';
+                        }
+                    });
+                }
+
+                if (data.errors && data.errors.length > 0) {
+                    errorsDiv.style.display = 'flex';
+                    errorText.textContent = data.errors.join(' | ');
+                }
+            } else {
+                errorsDiv.style.display = 'flex';
+                errorText.textContent = 'Yükleme sırasında bir hata oluştu.';
+            }
+        };
+
+        xhr.onerror = function() {
+            progressSection.style.display = 'none';
+            resultSection.style.display = 'block';
+            errorsDiv.style.display = 'flex';
+            errorText.textContent = 'Bağlantı hatası. Lütfen tekrar deneyin.';
+        };
+
+        xhr.send(formData);
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>
+<!-- Hidden CSRF token for AJAX -->
+<form style="display:none">{% csrf_token %}</form>
+{% endblock %}

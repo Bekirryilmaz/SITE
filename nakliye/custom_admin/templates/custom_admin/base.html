@@ -1,0 +1,199 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>{% block title %}Yönetim Paneli{% endblock %}</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Admin CSS -->
+    <link rel="stylesheet" href="{% static 'custom_admin/css/admin.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Yönetim Paneli</span>
+                </div>
+                <button class="sidebar-close" id="sidebarClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="{% url 'custom_admin:dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
+                    {% if admin_user.has_permission.can_manage_sliders or admin_user.is_superadmin %}
+                    <li>
+                        <a href="{% url 'custom_admin:slider_list' %}" class="{% if 'slider' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class="fas fa-images"></i>
+                            <span>Slider</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% if admin_user.has_permission.can_manage_services or admin_user.is_superadmin %}
+                    <li>
+                        <a href="{% url 'custom_admin:service_list' %}" class="{% if 'service' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class="fas fa-concierge-bell"></i>
+                            <span>Hizmetler</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% if admin_user.has_permission.can_manage_gallery or admin_user.is_superadmin %}
+                    <li>
+                        <a href="{% url 'custom_admin:gallery_list' %}" class="{% if 'gallery' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class="fas fa-photo-video"></i>
+                            <span>Galeri</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% if admin_user.has_permission.can_manage_messages or admin_user.is_superadmin %}
+                    <li>
+                        <a href="{% url 'custom_admin:message_list' %}" class="{% if 'message' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class="fas fa-envelope"></i>
+                            <span>Mesajlar</span>
+                            {% if unread_count %}
+                            <span class="badge">{{ unread_count }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% if admin_user.has_permission.can_manage_faq or admin_user.is_superadmin %}
+                    <li>
+                        <a href="{% url 'custom_admin:faq_list' %}" class="{% if 'faq' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class="fas fa-question-circle"></i>
+                            <span>SSS</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% if admin_user.has_permission.can_manage_about or admin_user.is_superadmin %}
+                    <li>
+                        <a href="{% url 'custom_admin:about_edit' %}" class="{% if 'about' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Hakkımızda</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% if admin_user.is_superadmin %}
+                    <li class="nav-divider">
+                        <span>YÖNETİM</span>
+                    </li>
+                    <li>
+                        <a href="{% url 'custom_admin:user_list' %}" class="{% if 'user' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class="fas fa-users-cog"></i>
+                            <span>Kullanıcılar</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="/" target="_blank" class="btn-site-view">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>Siteyi Görüntüle</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="page-title">{% block page_title %}Dashboard{% endblock %}</h1>
+                </div>
+                <div class="topbar-right">
+                    <div class="user-dropdown" id="userDropdown">
+                        <button class="user-dropdown-toggle">
+                            <div class="user-avatar">
+                                {{ admin_user.username|first|upper }}
+                            </div>
+                            <span class="user-name">{{ admin_user.full_name }}</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="user-dropdown-menu">
+                            <div class="dropdown-header">
+                                <strong>{{ admin_user.full_name }}</strong>
+                                <small>{{ admin_user.get_role_display }}</small>
+                            </div>
+                            <a href="{% url 'custom_admin:change_password' %}">
+                                <i class="fas fa-key"></i> Şifre Değiştir
+                            </a>
+                            <a href="{% url 'custom_admin:logout' %}" class="text-danger">
+                                <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Messages -->
+            {% if messages %}
+            <div class="alerts-container">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    <div class="alert-content">
+                        {% if message.tags == 'success' %}
+                        <i class="fas fa-check-circle"></i>
+                        {% elif message.tags == 'error' %}
+                        <i class="fas fa-exclamation-circle"></i>
+                        {% elif message.tags == 'warning' %}
+                        <i class="fas fa-exclamation-triangle"></i>
+                        {% else %}
+                        <i class="fas fa-info-circle"></i>
+                        {% endif %}
+                        <span>{{ message }}</span>
+                    </div>
+                    <button class="alert-close" onclick="this.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Page Content -->
+            <div class="content-area">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- Overlay for mobile sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Admin JS -->
+    <script src="{% static 'custom_admin/js/admin.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
